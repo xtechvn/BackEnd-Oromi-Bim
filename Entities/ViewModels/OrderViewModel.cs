@@ -51,6 +51,11 @@ namespace Entities.ViewModels
         public string ListProductId { get; set; }
         public string OrderStatus { get; set; }
         public string OrderCode { get; set; }
+        public string ProvinceName { get; set; }
+        public string DistrictName { get; set; }
+        public int Quantity { get; set; }
+        public string FullName { get; set; }
+        public string Phone { get; set; }
 
         public List<ProductMongoDbModel> ListProduct { get; set; }
     }
