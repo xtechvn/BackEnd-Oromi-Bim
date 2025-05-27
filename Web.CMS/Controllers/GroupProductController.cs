@@ -107,9 +107,9 @@ namespace WEB.CMS.Controllers
                 // Tạo message để push vào queue
                 var j_param = new Dictionary<string, object>
                             {
-                                { "store_name", "sp_getGroupProduct" },
-                                { "index_es", "es_biolife_sp_get_groupproduct" },
-                                {"project_type", Convert.ToInt16(ProjectType.BIOLIFE) },
+                                { "store_name",_configuration["DataBaseConfig:Elastic:SP:GroupProduct"] },
+                                { "index_es",_configuration["DataBaseConfig:Elastic:Index:GroupProduct"] },
+                                {"project_type", Convert.ToInt16(ProjectType.OMORI) },
                                   {"id" , id }
                             };
                 var _data_push = JsonConvert.SerializeObject(j_param);
@@ -161,9 +161,9 @@ namespace WEB.CMS.Controllers
                     // Tạo message để push vào queue
                     var j_param = new Dictionary<string, object>
                             {
-                                { "store_name", "sp_getGroupProduct" },
-                                { "index_es", "es_biolife_sp_getgroupproduct" },
-                                {"project_type", Convert.ToInt16(ProjectType.BIOLIFE) },
+                                { "store_name",_configuration["Elastic:SP:GroupProduct"] },
+                                { "index_es",_configuration["Elastic:Index:GroupProduct"] },
+                                {"project_type", Convert.ToInt16(ProjectType.OMORI) },
                                   {"id" ,  model.Id }
                             };
                     var _data_push = JsonConvert.SerializeObject(j_param);

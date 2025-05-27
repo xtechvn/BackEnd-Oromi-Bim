@@ -23,7 +23,7 @@ namespace WEB.CMS.Controllers
         private readonly IGroupProductRepository _groupProductRepository;
         private readonly RedisConn _redisConn;
         private StaticAPIService _staticAPIService;
-        private readonly int group_product_root = 31;
+        private readonly int group_product_root = 39;
         private readonly int db_index = 9;
         public ProductController(IConfiguration configuration, RedisConn redisConn, IGroupProductRepository groupProductRepository)
         {
@@ -35,6 +35,7 @@ namespace WEB.CMS.Controllers
             _groupProductRepository = groupProductRepository;
             db_index = Convert.ToInt32(configuration["Redis:Database:db_search_result"]);
             _configuration = configuration;
+            group_product_root = Convert.ToInt32( configuration["Config:group_product_root_id"]);
         }
         public IActionResult Index()
         {

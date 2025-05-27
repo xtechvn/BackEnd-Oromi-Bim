@@ -47,7 +47,6 @@ namespace WEB.CMS.Controllers
             _GroupProductRepository = groupProductRepository;
             work_queue = new WorkQueueClient(configuration);
 
-
         }
 
         public async Task<IActionResult> Index()
@@ -190,9 +189,9 @@ namespace WEB.CMS.Controllers
                     // Tạo message để push vào queue
                     var j_param = new Dictionary<string, object>
                             {
-                                { "store_name", "SP_GetAllArticle" },
-                                { "index_es", "es_biolife_sp_getallarticle" },
-                                {"project_type", Convert.ToInt16(ProjectType.BIOLIFE) },
+                                { "store_name",_configuration["DataBaseConfig:Elastic:SP:Article"]  },
+                                { "index_es", _configuration["DataBaseConfig:Elastic:Index:Article"] },
+                                {"project_type", Convert.ToInt16(ProjectType.OMORI) },
                                   {"id" , articleId }
                             };
                     var _data_push = JsonConvert.SerializeObject(j_param);
@@ -255,9 +254,9 @@ namespace WEB.CMS.Controllers
                     // Tạo message để push vào queue
                     var j_param = new Dictionary<string, object>
                             {
-                                { "store_name", "SP_GetAllArticle" },
-                                { "index_es", "es_biolife_sp_get_article" },
-                                {"project_type", Convert.ToInt16(ProjectType.BIOLIFE) },
+                                 { "store_name",_configuration["DataBaseConfig:Elastic:SP:Article"]  },
+                                { "index_es", _configuration["DataBaseConfig:Elastic:Index:Article"] },
+                                {"project_type", Convert.ToInt16(ProjectType.OMORI) },
                                   {"id" , Id }
                             };
                     var _data_push = JsonConvert.SerializeObject(j_param);
