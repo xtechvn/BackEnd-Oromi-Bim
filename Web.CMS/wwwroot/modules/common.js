@@ -8,7 +8,7 @@
             $(this).next('.form-down-filter').slideDown();
             $(this).next('.list-noti').slideDown();
             $('.form-down input').focus();
-
+            $(this).closest('td').find('.form-down').slideDown();
 
         }
     });
@@ -19,6 +19,7 @@
             $(this).next('.form-down').slideUp();
             $(this).next('.list-noti').slideUp();
             $(this).next('.form-down-filter').slideUp();
+            $(this).closest('td').find('.form-down').slideUp();
         }
 
     });
@@ -42,6 +43,9 @@
             $(this).next('.form-down-filter').slideUp();
         }
 
+    });
+    $('body').on('click', '.cancel', function () {
+        $.magnificPopup.close();
     });
 });
 var _global_function = {
@@ -77,7 +81,7 @@ var _global_function = {
     ParseJSDate: function (text) {
         var parse_value = text.split(' ')[0].split('/')
         if (parse_value != undefined && parse_value.length > 2) {
-            return new Date(parse_value[2] + '-' + parse_value[1] + '-' + parse_value[0] );
+            return new Date(parse_value[2] + '-' + parse_value[1] + '-' + parse_value[0]);
         }
         return undefined;
     },
@@ -265,7 +269,7 @@ var _global_function = {
         return new Date(year, month, 0);
     },
     DateDotNETToDatePicker: function (date) {
-        return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() ;
+        return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
     },
     RenderBreadcumb: function (breadcumb_list) {
         var html = `<div class="header-right">
