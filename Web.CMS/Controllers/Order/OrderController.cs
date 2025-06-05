@@ -9,6 +9,7 @@ using Repositories.IRepositories;
 using System.Security.Claims;
 using Utilities;
 using Utilities.Contants;
+using Web.CMS.Service.Product;
 using WEB.Adavigo.CMS.Service;
 using WEB.CMS.Customize;
 using WEB.CMS.Models.Product;
@@ -26,6 +27,7 @@ namespace WEB.CMS.Controllers
         private readonly IContractPayRepository _contractPayRepository;
         private readonly IPaymentRequestRepository _paymentRequestRepository;
         private readonly ProductDetailMongoAccess _productV2DetailMongoAccess;
+        private readonly OrderMongoAccess _orderMongoAccess;
 
         public OrderController(IConfiguration configuration, IAllCodeRepository allCodeRepository, IOrderRepository orderRepository, IClientRepository clientRepository, 
             IUserRepository userRepository, IContractPayRepository contractPayRepository, IPaymentRequestRepository paymentRequestRepository)
@@ -38,6 +40,7 @@ namespace WEB.CMS.Controllers
             _contractPayRepository = contractPayRepository;
             _paymentRequestRepository = paymentRequestRepository;
             _productV2DetailMongoAccess = new ProductDetailMongoAccess(configuration);
+            _orderMongoAccess = new OrderMongoAccess(configuration);
         }
         public IActionResult Index()
         {
@@ -86,6 +89,10 @@ namespace WEB.CMS.Controllers
                     foreach(var item in model.ListData)
                     {
                         item.ListProduct= await _productV2DetailMongoAccess.GetListByIds(item.ListProductId);
+                        var Order_detail= await _orderMongoAccess.GetByOrderNo(item.OrderNo);
+                        item.Phone = Order_detail!=null? Order_detail.phone:"";
+                        item.FullName = Order_detail != null ? Order_detail.receivername : "";
+                        item.Note = Order_detail != null ? Order_detail.note:"";
                     }
                 }
                 model2 = await _orderRepository.GetTotalCountSumOrder(searchModel);

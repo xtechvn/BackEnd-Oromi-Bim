@@ -5,6 +5,7 @@ using HuloToys_Service.ElasticSearch.NewEs;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Repositories.IRepositories;
+using System.Text;
 using Utilities;
 using Utilities.Contants;
 using Utilities.Contants.ProductV2;
@@ -23,7 +24,7 @@ namespace WEB.CMS.Controllers
         private readonly IGroupProductRepository _groupProductRepository;
         private readonly RedisConn _redisConn;
         private StaticAPIService _staticAPIService;
-        private readonly int group_product_root = 31;
+        private readonly int group_product_root = 39;
         private readonly int db_index = 9;
         public ProductController(IConfiguration configuration, RedisConn redisConn, IGroupProductRepository groupProductRepository)
         {
@@ -35,6 +36,7 @@ namespace WEB.CMS.Controllers
             _groupProductRepository = groupProductRepository;
             db_index = Convert.ToInt32(configuration["Redis:Database:db_search_result"]);
             _configuration = configuration;
+            group_product_root = Convert.ToInt32( configuration["Config:group_product_root_id"]);
         }
         public IActionResult Index()
         {
@@ -42,6 +44,33 @@ namespace WEB.CMS.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Search(string keyword = "", int group_id = -1, int page_index = 1, int page_size = 10)
+        {
+
+            if (page_size <= 0) page_size = 10;
+            if (page_index < 1) page_index = 1;
+            Console.WriteLine($"Controller received keyword: '{keyword}'");
+
+            // Kiểm tra encoding
+            var bytes = System.Text.Encoding.UTF8.GetBytes(keyword);
+            Console.WriteLine($"Keyword bytes: {string.Join(",", bytes)}");
+
+            var normalizedKeyword = keyword.Normalize(NormalizationForm.FormC);
+            Console.WriteLine($"Normalized keyword: '{normalizedKeyword}'");
+
+            var main_products = await _productV2DetailMongoAccess.Listing(keyword, group_id, page_index, page_size);
+            List<ProductMongoDbModel> sub_products = new List<ProductMongoDbModel>();
+            if (main_products != null && main_products.Count > 0)
+            {
+                sub_products = await _productV2DetailMongoAccess.ListSubListing(main_products.Select(x => x._id).ToList());
+            }
+            ViewBag.Main = main_products;
+            ViewBag.Sub = sub_products;
+            string static_domain = _configuration["DomainConfig:ImageStatic"];
+            ViewBag.StaticDomain = static_domain != null && static_domain.EndsWith("/") ? static_domain : static_domain + "/";
+            return View();
+        }
         public IActionResult Detail_old(string id = "")
         {
             ViewBag.ProductId = id;

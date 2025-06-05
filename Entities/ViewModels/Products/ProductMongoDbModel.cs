@@ -18,6 +18,7 @@ namespace Entities.ViewModels.Products
         }
         public string code { get; set; }
 
+        public string label_price { get; set; }
         public double price { get; set; }
         public double profit { get; set; }
         public double amount { get; set; }

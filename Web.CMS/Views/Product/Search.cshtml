@@ -1,0 +1,143 @@
+﻿@using Entities.ViewModels.Products
+@{
+    Layout = null;
+    List<ProductMongoDbModel> sub_products = (List<ProductMongoDbModel>)ViewBag.Sub;
+    List<ProductMongoDbModel> main_products = (List<ProductMongoDbModel>)ViewBag.Main;
+    string StaticDomain = (string)ViewBag.StaticDomain;
+}
+@if (main_products != null && main_products.Count > 0)
+{
+    foreach (var main in main_products)
+    {
+        var img_src = main.avatar;
+        if (img_src != null && !img_src.Contains(StaticDomain) && !img_src.Contains("data:image") && !img_src.Contains("http"))
+            img_src = StaticDomain + main.avatar;
+        <tr data-id="@main._id">
+            <td style="width: 0;">
+                <label class="check-list mb-3">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+            </td>
+            <td style="width: 100px;">
+                <div class="item-order">
+                    <div class="img">
+                        <img src="@img_src" alt="">
+                    </div>
+                    <div class="info">
+                        <h3 class="name-product">
+                            @main.name
+                        </h3>
+                        <div class="cat" style="display:none;"></div>
+
+                    </div>
+                </div>
+            </td>
+            @{
+                string amount_html = "0";
+
+                if (main.amount_max != null && main.amount_min != null)
+                {
+                    amount_html = ((double)main.amount_min).ToString("N0") + " - " + ((double)main.amount_max).ToString("N0");
+                }
+                else if (main.amount > 0)
+                {
+                    amount_html = main.amount.ToString("N0");
+                }
+                int stock_count = 0;
+                var sub_by_main = sub_products.Where(x => x.parent_product_id == main._id);
+                if (sub_by_main != null && sub_by_main.Count() > 0)
+                {
+                    foreach (var sub in sub_by_main)
+                    {
+                        stock_count += sub.quanity_of_stock;
+                    }
+                }
+                else
+                {
+                    stock_count = main.quanity_of_stock;
+                }
+            }
+            <td class="text-center"></td>
+            <td class="text-center">@amount_html</td>
+            <td class="text-center">@stock_count.ToString("N0")</td>
+            <td class="text-center">
+                <a href="javascript:;" class="product-edit">Cập nhật</a><br />
+                <a href="javascript:;" class="product-viewmore onclick">Xem thêm</a><br />
+
+                <div class="form-down grid-slide-{id}" style="display: none;">
+                    <div>
+                        <a href="javascript:;" class="product-copy-sp">Sao chép</a><br />
+                        <a href="javascript:;" class="product-remove-sp">Ẩn</a><br />
+                        <a href="javascript:;" class="product-open-sp">Hiển thị</a><br />
+                        <a href="javascript:;" class="product-remove-sp2">Xóa</a><br />
+                    </div>
+
+                </div>
+            </td>
+        </tr>
+        if (sub_by_main != null && sub_by_main.Count() > 0)
+        {
+            int c = 0;
+            foreach (var sub in sub_by_main)
+            {
+                c++;
+                var sub_attr_img = new List<string>(); string html_sub_attr = "";
+                foreach (var variation_attributes_item in sub.variation_detail)
+                {
+                    var attribute = sub.attributes.Where(obj => obj?._id == variation_attributes_item.id).ToList();
+                    var attribute_detail = sub.attributes_detail.Where(obj => obj?.attribute_id == variation_attributes_item.id && obj?.name == variation_attributes_item.name).ToList();
+
+
+                    if (attribute_detail != null && attribute_detail.Count > 0 && !string.IsNullOrEmpty(attribute_detail[0]?.img?.Trim()))
+                    {
+                        sub_attr_img.Add(attribute_detail[0].img);
+                    }
+
+                    if (attribute != null && attribute.Count > 0 && attribute_detail != null && attribute_detail.Count > 0)
+                    {
+                        html_sub_attr += $"{attribute[0].name}: {attribute_detail[0].name}";
+                    }
+
+                    if (variation_attributes_item.Equals(sub.variation_detail.LastOrDefault())) // Check if it's not the last item
+                    {
+                        html_sub_attr += "<br /> ";
+                    }
+                }
+
+                string img_src_sub = "";
+                if (sub_attr_img.Count > 0)
+                {
+                    img_src_sub = sub_attr_img[0];
+                    if (!img_src_sub.Contains(StaticDomain)
+                        && !img_src_sub.Contains("data:image")
+                        && !img_src_sub.Contains("http"))
+                    {
+                        img_src_sub = StaticDomain + sub_attr_img[0];
+                    }
+                }
+                <tr class="sub-product" data-id="@sub._id" data-main-id="@sub.parent_product_id" style="@(c>=2?"display:none;":"")">
+                    <td style="width: 0;">
+                    </td>
+                    <td style="width: 100px;">
+                        <div class="item-order">
+                            <div class="img">
+                                <img src="@(sub_attr_img.Count>0? img_src_sub : img_src)" alt="">
+                            </div>
+                            <div class="info">
+                                <h3 class="name-product"> Phân loại hàng:</h3>
+                                <div class="cat">@html_sub_attr</div>
+                                <div class="cat">@sub.sku</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center"></td>
+                    <td class="text-center">@sub.amount.ToString("N0")</td>
+                    <td class="text-center">@sub.quanity_of_stock.ToString("N0")</td>
+                    <td class="text-center"></td>
+                </tr>
+            }
+        }
+    }
+    <div id="search-count" style="display:none;">@main_products.Count</div>
+}

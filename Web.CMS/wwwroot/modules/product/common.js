@@ -80,7 +80,7 @@
             && !img_src.includes("http")
             && !img_src.includes("base64,"))
             img_src = _product_constants.VALUES.StaticDomain + image
-        else if  (!img_src.includes(_product_constants.VALUES.StaticDomain)
+        else if (!img_src.includes(_product_constants.VALUES.StaticDomain)
             && !img_src.includes("data:video")
             && !img_src.includes("http")
             && !img_src.includes("base64,"))
@@ -95,7 +95,7 @@
             return false
         }
     }
-    
+
 }
 var _product_constants = {
     VALUES: {
@@ -113,7 +113,7 @@ var _product_constants = {
         StaticDomain: `https://static-image.adavigo.com`,
         ImageExtension: ['jpeg', 'jpg', 'png', 'bmp'],
         VideoExtension: ['mp4'],
-
+        VideoMaxSize: 31457280
     },
     HTML: {
         Product: `
@@ -470,11 +470,11 @@ var _product_constants = {
 var _product_constants_2 = {
     Values: {
         GroupProduct: 32,
-        GroupProductName: 'BioLife',
+        GroupProductName: 'Omori',
 
     },
     Attributes: {
-        Input:` <div class="col-md-6 lastest-attribute-value item ui-sortable-handle attributes-detail" draggable="true">
+        Input: ` <div class="col-md-6 lastest-attribute-value item ui-sortable-handle attributes-detail" draggable="true">
                                                     <div class="box-list">
                                                         <div class="form-group namesp flex-input-choose">
                                                             <label class="choose choose-wrap">
@@ -497,7 +497,7 @@ var _product_constants_2 = {
                                                 </div>`
     },
     DiscountGroupBuy: {
-        Tr:` <tr>
+        Tr: ` <tr>
                                             <td>Khoảng giá  @(++i)</td>
                                             <td>
                                                 <div class="flex gap10 flex-nowrap align-items-center justify-content-center">

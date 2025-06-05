@@ -44,19 +44,18 @@
                     <tr>
                         <th>STT</th>
                         <th>Mã đơn</th>
+                        <th>Họ tên / Tên công ty</th>
+                        <th>Số điện thoại</th>
                         <th style="max-width:150px;">
-                           Tên sản phẩm
+                            Tên sản phẩm
                         </th>
+                        <th> số lượng </th>
                         <th> Tổng tiền </th>
-                        <th> Lợi nhuận </th>
-                        <th> Trạng thái đơn</th>
-                        <th> Trạng thái thanh toán</th>
-                        <th> Hình thức thanh toán</th>
-                        <th> Ngày tạo đơn</th>
-                        <th> khách hàng</th>
-                        <th>Voucher </th>
-                        <th>Người phụ trách </th>
-                        <th>Nguồn đơn </th>                      
+                        <th> Lời nhắn </th>
+                        <th> Tỉnh thành </th>
+                        <th> Khu vực hoạt động </th>
+                        <th> Ngày tạo </th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -69,10 +68,16 @@
                             <tr>
                                 <td class="center">@counter</td>
                                 <td>
-                                    <a class="blue" href="/Order/@item.OrderId" onclick="_ordersCMS.saveCookieFilter()">@item.OrderNo</a>
+                                    <p class="blue">@item.OrderNo</p>
                                 </td>
                                 <td>
-                                    @if(item.ListProduct != null && item.ListProduct.Count > 0)
+                                    @item.FullName
+                                </td>
+                                <td>
+                                    @item.Phone
+                                </td>
+                                <td>
+                                    @if (item.ListProduct != null && item.ListProduct.Count > 0)
                                     {
                                         foreach (var item2 in item.ListProduct)
                                         {
@@ -86,87 +91,32 @@
                                                 </div>
                                             </div>
                                         }
-                                      
+
                                     }
-                                    
+
                                 </td>
-                                <td class="text-right">
-                                    <div class="green">@item.Payment.ToString("#,##0")/</div>
-                                    <div class="red">@(item.Amount == 0 ? "0" : item.Amount.ToString("#,##"))</div>
-                                </td>
-                                <td>@item.Profit.ToString("#,##")</td>
+
                                 <td>
-                                    @switch (item.StatusCode)
-                                    {
-                                        case (int)(OrderStatus.CREATED_ORDER):
-                                        case (int)(OrderStatus.CONFIRMED_SALE):
-                                            {
-                                                <span class="status-oranger">@item.Status</span>
-                                            }
-                                            break;
-                                        case (int)(OrderStatus.WAITING_FOR_OPERATOR):
 
-                                            {
-                                                <span class="status-green">@item.Status</span>
-
-                                            }
-                                            break;
-                         
-                                        case (int)(OrderStatus.FINISHED):
-                                            {
-                                                <span class="status-green">@item.Status</span>
-                                            }
-                                            break;
-                                        case ((int)(OrderStatus.CANCEL)):
-
-                                            {
-                                                <span class="status-red">@item.Status</span>
-                                            }
-                                            break;
-                                    }
+                                    @item.Quantity
                                 </td>
                                 <td>
-                                    @if (item.PaymentStatus != "")
-                                    {
-                                        @if (Convert.ToInt32(item.PaymentStatus) == (int)PaymentStatus.UNPAID)
-                                        {
-                                            <div class="status-oranger">
-                                                @item.PaymentStatusName
-                                            </div>
-                                        }
-                                        @if (Convert.ToInt32(item.PaymentStatus) == (int)PaymentStatus.PAID)
-                                        {
-                                            <div class="status-green">
-                                                @item.PaymentStatusName
-                                            </div>
-                                        }
-                                        @if (Convert.ToInt32(item.PaymentStatus) == (int)PaymentStatus.PAID_NOT_ENOUGH)
-                                        {
-                                            <div class="status-blue">
-                                                @item.PaymentStatusName
-                                            </div>
-                                        }
-                                    }
+                                    @item.TotalAmount.ToString("N0")
                                 </td>
                                 <td>
-                                    @item.PaymentTypeName
+                                    @item.Note
+                                </td> 
+                                <td>
+                                    @item.ProvinceName
+                                </td> 
+                                <td>
+                                    @item.DistrictName
                                 </td>
+
                                 <td>
                                     @item.CreatedDate.ToString("dd/MM/yyyy")
                                 </td>
-                                <td>
-                                    <a class="blue" href="/CustomerManager/Detail/@item.ClientId">@item.ClientName</a>
-                                   
-                                    <div>@item.ClientNumber</div>
-                                    <div>@item.ClientEmail</div>
-                                </td>
-                                <td>
-                                    @item.Vouchercode
-                                </td>
-                                <td>
-                                    <div>@item.SalerName </div>
-                                </td>
-                                <td>@item.UtmSource</td>
+
                             </tr>
                         }
                     }
@@ -175,24 +125,24 @@
             </table>
         </div>
         @*@if (Model.ListData != null && Model.ListData.Count > 0)
-        {
-            <div class="bottom-action flex flex-nowrap gap10 justify-content-end mt-3">
-                <button class="btn btn-default white" style="padding: 0 10px;">
-                    <i class="icofont-gear"></i>
-                    <span>Tùy chỉnh</span>
-                </button>
-                <div class="form-group select-icon">
-                    <select class="select2" id="selectPaggingOptions" onchange="_ordersCMS.onSelectPageSize()">
-                        <option value="10">10 kết quả/trang</option>
-                        <option value="20">20 kết quả/trang</option>
-                        <option value="50">50 kết quả/trang</option>
-                        <option value="100">100 kết quả/trang</option>
-                        <option value="200">200 kết quả/trang</option>
-                        <option value="300">300 kết quả/trang</option>
-                    </select>
+            {
+                <div class="bottom-action flex flex-nowrap gap10 justify-content-end mt-3">
+                    <button class="btn btn-default white" style="padding: 0 10px;">
+                        <i class="icofont-gear"></i>
+                        <span>Tùy chỉnh</span>
+                    </button>
+                    <div class="form-group select-icon">
+                        <select class="select2" id="selectPaggingOptions" onchange="_ordersCMS.onSelectPageSize()">
+                            <option value="10">10 kết quả/trang</option>
+                            <option value="20">20 kết quả/trang</option>
+                            <option value="50">50 kết quả/trang</option>
+                            <option value="100">100 kết quả/trang</option>
+                            <option value="200">200 kết quả/trang</option>
+                            <option value="300">300 kết quả/trang</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-        }*@
+            }*@
         @await Component.InvokeAsync("PagingNew", new
 {
     pageModel = new Paging()
@@ -210,5 +160,5 @@
 
 </div>
 @*<script>
-    $('#selectPaggingOptions').select2();
-</script>*@
+        $('#selectPaggingOptions').select2();
+    </script>*@

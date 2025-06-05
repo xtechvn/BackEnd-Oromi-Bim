@@ -94,7 +94,7 @@ namespace WEB.CMS.Models.Product
                 }
                 var sort_filter = Builders<ProductMongoDbModel>.Sort;
                 var sort_filter_definition = sort_filter.Descending(x=>x.updated_last);
-                var model =  _productDetailCollection.Find(filterDefinition);
+                var model =  _productDetailCollection.Find(filterDefinition).Sort(sort_filter_definition); 
                 model.Options.Skip = page_index < 1 ? 0 : (page_index - 1) * page_size;
                 model.Options.Limit = page_size;
                 var result = await model.ToListAsync();
@@ -238,6 +238,25 @@ namespace WEB.CMS.Models.Product
             }
             return null;
 
+        }
+        public async Task<List<ProductMongoDbModel>> ListSubListing(List<string> parents_id)
+        {
+            try
+            {
+                var filter = Builders<ProductMongoDbModel>.Filter;
+                var filterDefinition = filter.Empty;
+                filterDefinition &= Builders<ProductMongoDbModel>.Filter.In(x => x.parent_product_id, parents_id);
+                filterDefinition &= Builders<ProductMongoDbModel>.Filter.Eq(x => x.status, (int)ProductStatus.ACTIVE); ;
+
+                var model = _productDetailCollection.Find(filterDefinition);
+                var result = await model.ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Utilities.LogHelper.InsertLogTelegram("ProductDetailMongoAccess - SubListing Error: " + ex);
+                return null;
+            }
         }
     }
 }
