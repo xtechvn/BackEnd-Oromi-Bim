@@ -1,6 +1,7 @@
 ﻿using Caching.RedisWorker;
 using Entities.ConfigModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Repositories.IRepositories;
 using Repositories.Repositories;
@@ -29,6 +30,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         SecurePolicy = CookieSecurePolicy.SameAsRequest
     };
 
+});
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // Tùy chọn: Thêm các IP tin cậy của Cloudflare để tăng cường bảo mật.
+    // Nếu không, middleware sẽ tin cậy bất kỳ IP nào gửi header này.
+    // options.KnownProxies.Add(IPAddress.Parse("172.16.0.0")); // Thay bằng IP của Cloudflare
+    // options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("172.16.0.0"), 20)); // Hoặc dải IP
 });
 var Configuration = builder.Configuration;
 builder.Services.Configure<DataBaseConfig>(Configuration.GetSection("DataBaseConfig"));
@@ -96,7 +107,8 @@ else
 }
 app.UseSession();
 
-app.UseHttpsRedirection();
+app.UseForwardedHeaders();
+//app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 // app.UseAntiXssMiddleware();
@@ -127,3 +139,6 @@ app.MapControllerRoute(name: "ProductDetail",
 
 
 app.Run();
+
+
+
