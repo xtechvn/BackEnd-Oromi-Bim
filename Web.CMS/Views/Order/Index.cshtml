@@ -38,19 +38,19 @@
 </style>
 <section style=" overflow-x: hidden;">
     <div class="bg-serach-main flex row-main-head">
-        <div class="form-group mb10 mr-2 operator-saler" style="min-width: 220px;">
+        @*<div class="form-group mb10 mr-2 operator-saler" style="min-width: 220px;">
             <div class="datepicker-wrap add-lbl " style="width:100%">
                 <select class="select2 client-select main-staff-select" id="OrderNo" multiple="multiple" style="width:100% !important">
                 </select>
             </div>
-        </div>
+        </div>*@
         <div class="form-group mb10 mr-2">
             <div class="datepicker-wrap" style="width:100%">
                 <input class="form-control date text-left filter_date_daterangepicker" id="filter_date_daterangepicker" type="text" name="datetimeOrder"
                        placeholder="Ngày tạo" />
             </div>
         </div>
-         @*   <div class="row-main-head mb10 mr-2">
+        @*   <div class="row-main-head mb10 mr-2">
                 <div class="down-up">
                     <a class="btn btn-default onclick" href="javascript:;">
                         <i class="fa fa-bars"></i>
@@ -197,11 +197,11 @@
             Tìm kiếm
         </button>
 
-        <div class="fillter-wrap mb10">
+        @* <div class="fillter-wrap mb10">
             <a class="btn color-main blue" href="javascript:;" style="outline: 0;display: inline-block;">
                 Tìm kiếm nâng cao
             </a>
-        </div>
+        </div> *@
 
 
         <div class="fillter-search dropdown-content">
@@ -216,168 +216,168 @@
                         </label>
                         <div class="wrap_input">
 
-@foreach (var item in SysTemType)
+                            @foreach (var item in SysTemType)
                             {
-                            <label class="radio mr-3">
-                                <input type="radio" name="SysTemType" value="@item.CodeValue" onclick="_ordersCMS.SearchData()">
-                                <span class="checkmark"></span>
+                                <label class="radio mr-3">
+                                    <input type="radio" name="SysTemType" value="@item.CodeValue" onclick="_ordersCMS.SearchData()">
+                                    <span class="checkmark"></span>
 
-@item.Description
+                                    @item.Description
                                 </label>
-}
-</div>
-</div>
-<div class="form-group">
-    <div class="datepicker-wrap" style="width:100% !important">
-        <select class="select2 client-select main-staff-select" id="ClientId" multiple="multiple" style="width:100% !important">
-        </select>
-    </div>
-</div>
-<div class="form-group">
-    <div class="datepicker-wrap" style="width:100%">
-        <input class="form-control date-range-filter" id="fromDate" type="text" name="fromDate" placeholder="Ngày bắt đầu">
-    </div>
-</div>
-<div class="form-group">
-    <div class="datepicker-wrap" style="width:100%">
-        <input class="form-control date-range-filter" id="toDate" type="text" name="toDate" placeholder="Ngày kết thúc">
-    </div>
-</div>
-<div class="form-group" style="width:100% !important">
-    <input type="text" class="form-control" id="Note" placeholder="Nhãn đơn" style="width:100% !important">
-</div>
-<div class="form-group" style="width:100% !important">
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="datepicker-wrap" style="width:100% !important">
+                            <select class="select2 client-select main-staff-select" id="ClientId" multiple="multiple" style="width:100% !important">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="datepicker-wrap" style="width:100%">
+                            <input class="form-control date-range-filter" id="fromDate" type="text" name="fromDate" placeholder="Ngày bắt đầu">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="datepicker-wrap" style="width:100%">
+                            <input class="form-control date-range-filter" id="toDate" type="text" name="toDate" placeholder="Ngày kết thúc">
+                        </div>
+                    </div>
+                    <div class="form-group" style="width:100% !important">
+                        <input type="text" class="form-control" id="Note" placeholder="Nhãn đơn" style="width:100% !important">
+                    </div>
+                    <div class="form-group" style="width:100% !important">
 
-    <select class="select2 client-select main-staff-select" id="CreateName" multiple="multiple" style="width:100% !important">
-    </select>
-</div>
-</div>
-<div class="col-md-6">
-    <div class="form-group" style="margin-top: 31px;"></div>
-    <div class="form-group">
-        <div class="multiple-select " style="width:100% !important">
-            <div class="select-btn select-service-type" id="ServiceType" style="width:100% !important">
-                <span class="btn-text-service">Tất cả dịch vụ</span>
-                <span class="arrow-dwn">
-                    <i class="fa fa-angle-down"></i>
-                </span>
-            </div>
+                        <select class="select2 client-select main-staff-select" id="CreateName" multiple="multiple" style="width:100% !important">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" style="margin-top: 31px;"></div>
+                    <div class="form-group">
+                        <div class="multiple-select " style="width:100% !important">
+                            <div class="select-btn select-service-type" id="ServiceType" style="width:100% !important">
+                                <span class="btn-text-service">Tất cả dịch vụ</span>
+                                <span class="arrow-dwn">
+                                    <i class="fa fa-angle-down"></i>
+                                </span>
+                            </div>
 
-            <ul class="list-items" id="list-item-service-type">
+                            <ul class="list-items" id="list-item-service-type">
 
-@foreach (var item in Type)
+                                @foreach (var item in Type)
                                 {
-                <li class="item item-services" id="service_data_@item.CodeValue">
-                    <span class="checkbox" id="checkbox_service_type_@item.CodeValue">
-                        <i class="fa fa-check"></i>
-                    </span>
-                    <span class="item-text" id="service_text_@item.CodeValue">n</span>
-                    </li>
-}
-</ul>
-</div>
-</div>
-<div class="form-group">
-    <div class="multiple-select" style="width:100% !important">
-        <div class="select-btn select-btn-status" id="Status" style="width:100% !important">
-            <span class="btn-text-status">Tất cả trạng thái</span>
-            <span class="arrow-dwn">
-                <i class="fa fa-angle-down"></i>
-            </span>
-        </div>
+                                    <li class="item item-services" id="service_data_@item.CodeValue">
+                                        <span class="checkbox" id="checkbox_service_type_@item.CodeValue">
+                                            <i class="fa fa-check"></i>
+                                        </span>
+                                        <span class="item-text" id="service_text_@item.CodeValue">n</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="multiple-select" style="width:100% !important">
+                            <div class="select-btn select-btn-status" id="Status" style="width:100% !important">
+                                <span class="btn-text-status">Tất cả trạng thái</span>
+                                <span class="arrow-dwn">
+                                    <i class="fa fa-angle-down"></i>
+                                </span>
+                            </div>
 
-        <ul class="list-items list-item-status" id="list-item-status">
+                            <ul class="list-items list-item-status" id="list-item-status">
 
-@foreach (var item in Status)
+                                @foreach (var item in Status)
                                 {
-            <li class="item item-status" id="status_data_@item.CodeValue">
-                <span class="checkbox" id="checkbox_status_@item.CodeValue">
-                    <i class="fa fa-check"></i>
-                </span>
-                <span class="item-text" id="status_text_@item.CodeValue">n</span>
-                </li>
-}
-</ul>
-</div>
-</div>
-<div class="form-group">
-    <div class="multiple-select" style="width:100% !important">
-        <div class="select-btn select-btn-HINHTHUCTT" id="HINHTHUCTT" style="width:100% !important">
-            <span class="btn-text-HINHTHUCTT">Tất cả hình thức thanh toán</span>
-            <span class="arrow-dwn">
-                <i class="fa fa-angle-down"></i>
-            </span>
-        </div>
+                                    <li class="item item-status" id="status_data_@item.CodeValue">
+                                        <span class="checkbox" id="checkbox_status_@item.CodeValue">
+                                            <i class="fa fa-check"></i>
+                                        </span>
+                                        <span class="item-text" id="status_text_@item.CodeValue">n</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="multiple-select" style="width:100% !important">
+                            <div class="select-btn select-btn-HINHTHUCTT" id="HINHTHUCTT" style="width:100% !important">
+                                <span class="btn-text-HINHTHUCTT">Tất cả hình thức thanh toán</span>
+                                <span class="arrow-dwn">
+                                    <i class="fa fa-angle-down"></i>
+                                </span>
+                            </div>
 
-        <ul class="list-items list-item-HINHTHUCTT" id="list-item-HINHTHUCTT">
+                            <ul class="list-items list-item-HINHTHUCTT" id="list-item-HINHTHUCTT">
 
-@foreach (var item in PERMISION_TYPE)
+                                @foreach (var item in PERMISION_TYPE)
                                 {
 
-@foreach (var item2 in PAYMENT_STATUS)
+                                    @foreach (var item2 in PAYMENT_STATUS)
                                     {
-            <li class="item item-HINHTHUCTT" id="HINHTHUCTT_data_@(item.CodeValue +" _"+ item2.CodeValue)">
-                <span class="checkbox" id="checkbox_HINHTHUCTT_@(item.CodeValue+" _"+ item2.CodeValue)">
-                    <i class="fa fa-check"></i>
-                </span>
-                <span class="item-text" id="HINHTHUCTT_text_@item.Description - @item2.Description">n - @item2.Description</span>
-                </li>
+                                        <li class="item item-HINHTHUCTT" id="HINHTHUCTT_data_@(item.CodeValue +" _"+ item2.CodeValue)">
+                                            <span class="checkbox" id="checkbox_HINHTHUCTT_@(item.CodeValue+" _"+ item2.CodeValue)">
+                                                <i class="fa fa-check"></i>
+                                            </span>
+                                            <span class="item-text" id="HINHTHUCTT_text_@item.Description - @item2.Description">n - @item2.Description</span>
+                                        </li>
 
-}
-}
+                                    }
+                                }
 
-</ul>
-</div>
-</div>
+                            </ul>
+                        </div>
+                    </div>
 
-<div class="form-group">
-    <select class="select2 client-select main-staff-select" id="OperatorId" multiple="multiple" style="width:100% !important">
-    </select>
+                    <div class="form-group">
+                        <select class="select2 client-select main-staff-select" id="OperatorId" multiple="multiple" style="width:100% !important">
+                        </select>
 
-</div>
-<div class="form-group">
-    <select class="select2 client-select main-staff-select" id="BoongKingCode" multiple="multiple" style="width:100% !important">
-    </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="select2 client-select main-staff-select" id="BoongKingCode" multiple="multiple" style="width:100% !important">
+                        </select>
 
-</div>
-<div class="form-group mb10 mr-2" style="display:none">
-    <select class="select2" name="" style="width: 150px;">
-        <option value="">Tất cả bộ phận phụ</option>
-        <option value="">Đại lý</option>
-        <option value="">Cộng tác viên</option>
-        <option value="">Mice/Corp/Doanh nghiệp</option>
-    </select>
-</div>
-<div class="form-group mb10 mr-2">
-    <input type="text" style="display:none" class="form-control" id="" placeholder="Nhân viên phụ">
-</div>
-</div>
-<div class="form-group text-center col-12 mt20 block">
-    <button type="submit" class="btn btn-default bg-main" onclick="_ordersCMS.SearchData()">
-        <svg class="icon-svg" style="vertical-align: sub;">
-            <use xlink:href="/images/icons/icon.svg#search"></use>
-        </svg>
-        Tìm kiếm
-    </button>
-    <a class="btn btn-default cancel" href="javascript:;">
-        Bỏ tìm kiếm nâng cao
-        <i class="fa fa-caret-up"></i>
-    </a>
-</div>
-</div>
-</div>
-
-</div>
-
-<div class="row-main container">
-
-
-    <div class="">
-        <div id="grid-data">
+                    </div>
+                    <div class="form-group mb10 mr-2" style="display:none">
+                        <select class="select2" name="" style="width: 150px;">
+                            <option value="">Tất cả bộ phận phụ</option>
+                            <option value="">Đại lý</option>
+                            <option value="">Cộng tác viên</option>
+                            <option value="">Mice/Corp/Doanh nghiệp</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb10 mr-2">
+                        <input type="text" style="display:none" class="form-control" id="" placeholder="Nhân viên phụ">
+                    </div>
+                </div>
+                <div class="form-group text-center col-12 mt20 block">
+                    <button type="submit" class="btn btn-default bg-main" onclick="_ordersCMS.SearchData()">
+                        <svg class="icon-svg" style="vertical-align: sub;">
+                            <use xlink:href="/images/icons/icon.svg#search"></use>
+                        </svg>
+                        Tìm kiếm
+                    </button>
+                    <a class="btn btn-default cancel" href="javascript:;">
+                        Bỏ tìm kiếm nâng cao
+                        <i class="fa fa-caret-up"></i>
+                    </a>
+                </div>
+            </div>
         </div>
+
     </div>
 
-</div>
+    <div class="row-main container">
+
+
+        <div class="">
+            <div id="grid-data">
+            </div>
+        </div>
+
+    </div>
 </section>
 
 
@@ -385,7 +385,7 @@
 
 @section scripts {
     <script type="text/javascript" src="~/js/zebra_datepicker.min.js"></script>
-    <script type="text/javascript" src="~/modules/orderCMS.js?v=13"></script>
+    <script type="text/javascript" src="~/modules/orderCMS.js?v=13" asp-append-version="true"></script>
     <script type="text/javascript" src="~/modules/order_detail.js?v=13"></script>
     <script type="text/javascript" src="~/modules/order_detail_common.js"></script>
     <script type="text/javascript" src="~/modules/order_detail_html.js"></script>

@@ -1,10 +1,12 @@
-﻿using DAL;
+﻿using Aspose.Cells;
+using DAL;
 using DAL.OrderDetail;
 using DAL.StoreProcedure;
 using Entities.ConfigModels;
 using Entities.Models;
 using Entities.ViewModels;
 using Entities.ViewModels.OrderDetail;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Nest;
 using PdfSharp;
@@ -12,6 +14,7 @@ using Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -228,6 +231,139 @@ namespace Repositories.Repositories
                 LogHelper.InsertLogTelegram("GetByClientId - OrderRepository: " + ex);
             }
             return new List<OrderViewModel>();
+        }
+        public async Task<string> ExportDeposit(List<OrderViewModel> data, string FilePath)
+        {
+            var pathResult = string.Empty;
+            try
+            {
+
+
+                if (data != null && data.Count > 0)
+                {
+                    Workbook wb = new Workbook();
+                    Worksheet ws = wb.Worksheets[0];
+                    ws.Name = "Danh sách đơn hàng";
+                    Cells cell = ws.Cells;
+
+                    var range = ws.Cells.CreateRange(0, 0, 1, 1);
+                    StyleFlag st = new StyleFlag();
+                    st.All = true;
+                    Style style = ws.Cells["A1"].GetStyle();
+
+                    #region Header
+                    range = cell.CreateRange(0, 0, 1, 14);
+                    style = ws.Cells["A1"].GetStyle();
+                    style.Font.IsBold = true;
+                    style.IsTextWrapped = true;
+                    style.ForegroundColor = Color.FromArgb(33, 88, 103);
+                    style.BackgroundColor = Color.FromArgb(33, 88, 103);
+                    style.Pattern = BackgroundType.Solid;
+                    style.Font.Color = Color.White;
+                    style.VerticalAlignment = TextAlignmentType.Center;
+                    style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.TopBorder].Color = Color.Black;
+                    style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.BottomBorder].Color = Color.Black;
+                    style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.LeftBorder].Color = Color.Black;
+                    style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.RightBorder].Color = Color.Black;
+                    range.ApplyStyle(style, st);
+
+                    // Set column width
+                    cell.SetColumnWidth(0, 8);
+                    cell.SetColumnWidth(1, 20);
+                    cell.SetColumnWidth(2, 40);
+                    cell.SetColumnWidth(3, 20);
+                    cell.SetColumnWidth(4, 20);
+                    cell.SetColumnWidth(5, 30);
+                    cell.SetColumnWidth(6, 30);
+                    cell.SetColumnWidth(7, 25);
+                    cell.SetColumnWidth(8, 25);
+                    cell.SetColumnWidth(9, 25);
+
+
+
+
+                    // Set header value
+                    ws.Cells["A1"].PutValue("STT");
+                    ws.Cells["B1"].PutValue("Mã đơn");
+                    ws.Cells["C1"].PutValue("Họ tên / Tên công ty");
+                    ws.Cells["D1"].PutValue("Số điện thoại");
+                    ws.Cells["E1"].PutValue("Tên sản phẩm");
+                    ws.Cells["F1"].PutValue("Số lượng");
+                    ws.Cells["G1"].PutValue("Tổng tiền");
+                    ws.Cells["H1"].PutValue("Lời nhắn");
+                    ws.Cells["I1"].PutValue("Tỉnh thành");
+                    ws.Cells["J1"].PutValue("Khu vực hoạt động");
+                    ws.Cells["K1"].PutValue("Ngày tạo");
+
+
+                    #endregion
+
+                    #region Body
+
+                    range = cell.CreateRange(1, 0, data.Count, 14);
+                    style = ws.Cells["A2"].GetStyle();
+                    style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.TopBorder].Color = Color.Black;
+                    style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.BottomBorder].Color = Color.Black;
+                    style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.LeftBorder].Color = Color.Black;
+                    style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                    style.Borders[BorderType.RightBorder].Color = Color.Black;
+                    style.VerticalAlignment = TextAlignmentType.Center;
+                    range.ApplyStyle(style, st);
+
+                    Style alignCenterStyle = ws.Cells["A2"].GetStyle();
+                    alignCenterStyle.HorizontalAlignment = TextAlignmentType.Center;
+
+                    Style numberStyle = ws.Cells["A2"].GetStyle();
+                    numberStyle.Number = 3;
+                    numberStyle.HorizontalAlignment = TextAlignmentType.Right;
+                    numberStyle.VerticalAlignment = TextAlignmentType.Center;
+
+                    int RowIndex = 1;
+
+                    foreach (var item in data)
+                    {
+
+                        RowIndex++;
+                        ws.Cells["A" + RowIndex].PutValue(RowIndex - 1);
+                        ws.Cells["A" + RowIndex].SetStyle(alignCenterStyle);
+                        ws.Cells["B" + RowIndex].PutValue(item.OrderNo);
+                        ws.Cells["C" + RowIndex].PutValue(item.FullName);
+                        ws.Cells["D" + RowIndex].PutValue(item.Phone);
+                        if (item.ListProduct != null && item.ListProduct.Count > 0)
+                        {
+                            foreach (var item2 in item.ListProduct)
+                            {
+                                ws.Cells["E" + RowIndex].PutValue(item2.name);
+
+                            }
+                        }
+                        ws.Cells["F" + RowIndex].PutValue(item.Quantity);
+                        ws.Cells["G" + RowIndex].PutValue(item.TotalAmount.ToString("N0"));
+                        ws.Cells["H" + RowIndex].PutValue(item.Note);
+                        ws.Cells["I" + RowIndex].PutValue(item.ProvinceName);
+                        ws.Cells["J" + RowIndex].PutValue(item.DistrictName);
+                        ws.Cells["K" + RowIndex].PutValue(item.CreatedDate.ToString("dd/MM/yyyy"));
+
+
+                    }
+
+                    #endregion
+                    wb.Save(FilePath);
+                    pathResult = FilePath;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ExportDeposit - OrderRepository: " + ex);
+            }
+            return pathResult;
         }
 
     }

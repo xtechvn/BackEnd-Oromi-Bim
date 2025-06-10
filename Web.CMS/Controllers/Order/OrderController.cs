@@ -2,9 +2,11 @@
 using Entities.Models;
 using Entities.ViewModels;
 using Entities.ViewModels.Mongo;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
 using NuGet.Packaging.Signing;
+using PdfSharp;
 using Repositories.IRepositories;
 using System.Security.Claims;
 using Utilities;
@@ -28,9 +30,9 @@ namespace WEB.CMS.Controllers
         private readonly IPaymentRequestRepository _paymentRequestRepository;
         private readonly ProductDetailMongoAccess _productV2DetailMongoAccess;
         private readonly OrderMongoAccess _orderMongoAccess;
-
+        private readonly IWebHostEnvironment _WebHostEnvironment;
         public OrderController(IConfiguration configuration, IAllCodeRepository allCodeRepository, IOrderRepository orderRepository, IClientRepository clientRepository, 
-            IUserRepository userRepository, IContractPayRepository contractPayRepository, IPaymentRequestRepository paymentRequestRepository)
+            IUserRepository userRepository, IContractPayRepository contractPayRepository, IPaymentRequestRepository paymentRequestRepository, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _allCodeRepository = allCodeRepository;
@@ -41,6 +43,7 @@ namespace WEB.CMS.Controllers
             _paymentRequestRepository = paymentRequestRepository;
             _productV2DetailMongoAccess = new ProductDetailMongoAccess(configuration);
             _orderMongoAccess = new OrderMongoAccess(configuration);
+            _WebHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -337,6 +340,84 @@ namespace WEB.CMS.Controllers
                 });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> ExportExcel(OrderViewSearchModel searchModel, FieldOrder field)
+        {
+            try
+            {
+               
+           
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Danh sách đơn hàng", _UserId, "xlsx");
+                string _UploadFolder = @"Template\Export";
+                string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 
+                if (!Directory.Exists(_UploadDirectory))
+                {
+                    Directory.CreateDirectory(_UploadDirectory);
+                }
+                //delete all file in folder before export
+                try
+                {
+                    System.IO.DirectoryInfo di = new DirectoryInfo(_UploadDirectory);
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+                catch
+                {
+                }
+                string FilePath = Path.Combine(_UploadDirectory, _FileName);
+                searchModel.pageSize = 99999;
+                searchModel.PageIndex = -1;
+                var model = new GenericViewModel<OrderViewModel>();
+                var model2 = new TotalCountSumOrder();
+                model = await _orderRepository.GetList(searchModel);
+                if (model != null && model.ListData != null && model.ListData.Count > 0)
+                {
+                    foreach (var item in model.ListData)
+                    {
+                        item.ListProduct = await _productV2DetailMongoAccess.GetListByIds(item.ListProductId);
+                        var Order_detail = await _orderMongoAccess.GetByOrderNo(item.OrderNo);
+                        item.Phone = Order_detail != null ? Order_detail.phone : "";
+                        item.FullName = Order_detail != null ? Order_detail.receivername : "";
+                        item.Note = Order_detail != null ? Order_detail.note : "";
+                    }
+                }
+                var rsPath = await _orderRepository.ExportDeposit(model.ListData, FilePath);
+
+                if (!string.IsNullOrEmpty(rsPath))
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = true,
+                        message = "Xuất dữ liệu thành công",
+                        path = "/" + _UploadFolder + "/" + _FileName
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = false,
+                        message = "Xuất dữ liệu thất bại"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ExportExcel - OrderController: " + ex);
+                return new JsonResult(new
+                {
+                    isSuccess = false,
+                    message = ex.Message.ToString()
+                });
+            }
+        }
     }
 }
