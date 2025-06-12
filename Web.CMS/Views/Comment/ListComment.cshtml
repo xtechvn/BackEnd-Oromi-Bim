@@ -1,8 +1,23 @@
 ﻿@using Entities.ViewModels
 @using Entities.ViewModels.Comment
-@model GenericViewModel<CommentViewModel>
+@using Utilities
+@using Entities.ViewModels.Mongo
+@model List<CommentMongoViewModel>
 @{
+    int total = Convert.ToInt32( ViewBag.total);
+    int PageSize = Convert.ToInt32(ViewBag.PageSize);
+    int CurrentPage = Convert.ToInt32(ViewBag.CurrentPage);
+    int TotalPage = Convert.ToInt32(ViewBag.TotalPage);
     Layout = null;
+    int STT = 0;
+    if (CurrentPage == 1)
+    {
+        STT = 1;
+    }
+    else
+    {
+        STT = ((CurrentPage - 1) * PageSize) + 1;
+    }
 }
 <style>
     .OptionRow {
@@ -21,76 +36,71 @@
         border: 1px solid #CCCCCC;
     }
 </style>
-<table id="table-comment" class="table table-nowrap mt-3">
-    <thead id="table-head">
-        <tr class="bg-main2" style="background-color:#F3F5F8">
-            <th class="thead-fields">STT</th>
-            <th class="thead-fields">KHÁCH HÀNG</th>
-            <th class="thead-fields">NỘI DUNG CÂU HỎI - PHẢN HỒI </th>
-            <th class="thead-fields">NGÀY TẠO</th>
-        </tr>
-    </thead>
-    <tbody id="table-comment-body">
-        @if (Model.ListData != null && Model.ListData.Count > 0)
-        {
-            int STT = 0;
-            if (Model.CurrentPage == 1)
-            {
-                STT = 1;
-            }
-            else
-            {
-                STT = ((Model.CurrentPage-1)*Model.PageSize) + 1;
-            }
-            foreach (var i in Model.ListData)
-            {
-                <tr>
-                    <td class="OptionRow trow-fields">@STT</td>
-                    <td class="OptionRow">
-                        <div style="display: flex; flex-direction: column;">
-                            <h5>@i.ClientName</h5>
-                            <h7>@i.Phone</h7>
-                            <h7>@i.Email</h7>
-                        </div>
-                    </td>
-                    <td class="OptionRow" style="max-width:500px;word-wrap: break-word">
-                        <div class="">@i.Content</div>
-                    </td>
-                    <td class="OptionRow">
-                        <div class="trow-fields">@i.CreatedDate</div>
-                    </td>
-
+@if (Model == null)
+{
+    <div class="search-null center mb40" style="height:300px;">
+        <div class="mb24">
+            <img src="/images/graphics/icon-search.png" alt="">
+        </div>
+        <h2 class="title txt_24">Không tìm thấy kết quả</h2>
+        <div class="gray">Chúng tôi không tìm thấy thông tin mà bạn cần, vui lòng thử lại</div>
+    </div>
+}
+else
+{
+    <div class="table-responsive table-default">
+        <table id="table-comment" class="table table-nowrap mt-3">
+            <thead id="table-head">
+                <tr class="bg-main2" style="background-color:#F3F5F8">
+                    <th class="thead-fields">STT</th>
+                    <th class="thead-fields">KHÁCH HÀNG</th>
+                    <th class="thead-fields">Số điện thoại </th>
+                    <th class="thead-fields">Phân loại </th>
+                    <th class="thead-fields">Ghi chú </th>
+                    <th class="thead-fields">NGÀY TẠO</th>
                 </tr>
-                STT += 1;
-            }
-        }
-        else
+            </thead>
+            <tbody id="table-comment-body">
+                @if (Model != null && Model.Count > 0)
+                {
+                    
+                    foreach (var i in Model)
+                    {
+                        <tr>
+                            <td>@STT</td>
+                            <td>@i.Name</td>
+                            <td>@i.phone</td>
+                            <td>@i.Type</td>
+
+                            <td>
+                                @i.Note
+                            </td>
+                            <td>
+                                @i.CreateDate.ToString("dd/MM/yyyy")
+                            </td>
+
+                        </tr>
+                        STT += 1;
+                    }
+                }
+                
+            </tbody>
+        </table>
+    </div>
+    @await Component.InvokeAsync("PagingNew", new
         {
-            <script>
-                $('#table-head').html(``);
-                $('#table-comment-body').html(``);
-                $('#table-head').append(`
-                                <div class="search-null center mb40">
-                                    <div class="mb24">
-                                        <img src="/images/graphics/icon-search.png" alt="">
-                                    </div>
-                                    <h2 class="title txt_24">Không tìm thấy kết quả</h2>
-                                    <div class="gray">Chúng tôi không tìm thấy thông tin mà bạn cần, vui lòng thử lại</div>
-                                </div>
-                                `);
-            </script>
-        }
-    </tbody>
-</table>
-@await Component.InvokeAsync("PagingV2", new
-    {
-        pageModel = new Paging()
-    {
-        TotalRecord = Model.TotalRecord,
-        TotalPage = Model.TotalPage,
-        CurrentPage = Model.CurrentPage,
-        PageSize = Model.PageSize,
-        RecordName = "Góp ý",
-        PageAction = "_comment.OnPanging({0})"
-    }
-    })
+
+            pageModel = new Paging()
+       {
+           TotalRecord = total,
+           TotalPage = TotalPage,
+           CurrentPage = CurrentPage,
+           PageSize = PageSize,
+           RecordName = "Tin",
+            PageAction = "_comment.OnPanging({0})",
+        PageSelectPageSize = "_comment.onSelectPageSize()"
+          
+       }
+        })
+}
+

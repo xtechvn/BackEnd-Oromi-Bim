@@ -1,8 +1,11 @@
 ﻿using Entities.ViewModels.CustomerManager;
 using Entities.ViewModels.Mongo;
+using Entities.ViewModels.TransferSms;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Nest;
 using Newtonsoft.Json;
+using PdfSharp;
 using Utilities;
 using WEB.Adavigo.CMS.Service;
 
@@ -88,6 +91,48 @@ namespace WEB.CMS.Service
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("GetListLogCache - LogCacheFilterMongoService. " + JsonConvert.SerializeObject(ex));
+            }
+            return listLog;
+        }
+        public List<CommentMongoViewModel> GetListComment(CommentMongoSearchViewModel searchModel, out long total, int pageIndex = 1, int pageSize = 10)
+        {
+            var listLog = new List<CommentMongoViewModel>();
+            try
+            {
+                var db = MongodbService.GetDatabase();
+                total = 0;
+
+                var collection = db.GetCollection<CommentMongoViewModel>(configuration["DataBaseConfig:MongoServer:Comments_KH"]);
+                var filter = Builders<CommentMongoViewModel>.Filter.Empty;
+
+                if (!string.IsNullOrEmpty(searchModel.FromDateStr))
+                {
+                    filter &= Builders<CommentMongoViewModel>.Filter.Gte("ReceiveTime", searchModel.FromDate);
+                }
+                if (!string.IsNullOrEmpty(searchModel.ToDateStr))
+                {
+                    filter &= Builders<CommentMongoViewModel>.Filter.Lte("ReceiveTime", searchModel.ToDate);
+                }
+                var S = Builders<CommentMongoViewModel>.Sort.Descending(x => x.CreateDate);
+
+
+                total = collection.Find(filter).Count();
+                if (pageSize > 0)
+                {
+                    listLog = collection.Find(filter).Sort(S)
+                    .Skip((pageIndex - 1) * pageSize).Limit(pageSize)
+                        .ToList();
+                }
+                else
+                {
+                    listLog = collection.Find(filter).Sort(S).ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                total = 0;
                 LogHelper.InsertLogTelegram("GetListLogCache - LogCacheFilterMongoService. " + JsonConvert.SerializeObject(ex));
             }
             return listLog;
