@@ -2,41 +2,38 @@
     ViewData["Title"] = "Quản lý Comments";
 }
 <style>
-    .centered option{
+    .centered option {
         text-align: center;
     }
 
-    .selection span
-    {
+    .selection span {
         height: 35px !important;
     }
 
-     .ClientInput_Arrow{
+    .ClientInput_Arrow {
         display: none !important;
     }
 </style>
 <div class="bg-serach-main" style="width:100%,margin:0px">
-    <div class="flex justify-between">
-        <select class="select2 select2-hidden-accessible" onchange="_comment.OnChangeClient()" name="" id="clientInput" style="width: 88%;" tabindex="-1" aria-hidden="true">
-        </select>
-        <select class="select2 centered" name="" id="DateInput" onchange="_comment.OnChanggeDate()" style="width: 10%;" tabindex="-1" aria-hidden="true">
-            <option class="" value="all" data-select2-id="select2-data-3-o5x9">
-                <strong>Tất cả</strong>
-            </option>
-            <option class="mt-2" value="today">Hôm nay</option>
-            <option class="mt-2" value="yesterday">Hôm qua</option>
-            <option class="mt-2" value="thisWeek">Tuần này</option>
-            <option class="mt-2" value="lastWeek">Tuần trước</option>
-            <option class="mt-2" value="thisMonth">Tháng này</option>
-            <option class="mt-2" value="lastMonth">Tháng trước</option>
-            <option class="mt-2" value="thisQuarter">Quý này</option>
-            <option class="mt-2" value="lastQuarter">Quý Trước</option>
-        </select>
+    <div class="row">
+        <div class="form-group mb10 mr-2">
+            <div class="datepicker-wrap" style="width:100%">
+                <input class="form-control date text-left filter_date_daterangepicker" id="fromDate" type="text" name="datetimeOrder"
+                       placeholder="Ngày tạo" />
+            </div>
+        </div>
+        <button type="button" class="btn btn-default bg-main mb10" style="margin-left:10px" onclick="_comment.SearchData()">
+            <svg class="icon-svg" style="vertical-align: sub;">
+                <use xlink:href="/images/icons/icon.svg#search"></use>
+            </svg>
+            Tìm kiếm
+        </button>
     </div>
     <div id="Comment-content">
 
     </div>
 </div>
 @section scripts {
+    <script type="text/javascript" src="~/js/zebra_datepicker.min.js"></script>
     <script type="text/javascript" src="~/modules/comment.js" asp-append-version="true"></script>
 }
