@@ -48,6 +48,7 @@ namespace Entities.ViewModels.Products
         public Order order { get; set; }
         public List<OrderDetail> order_detail { get; set; }
         public string note { get; set; }
+        public string email { get; set; }
 
     }
     public class CartItemMongoDbModel

@@ -96,6 +96,7 @@ namespace WEB.CMS.Controllers
                         item.Phone = Order_detail!=null? Order_detail.phone:"";
                         item.FullName = Order_detail != null ? Order_detail.receivername : "";
                         item.Note = Order_detail != null ? Order_detail.note:"";
+                        item.Email = Order_detail != null ? Order_detail.email:"";
                     }
                 }
                 model2 = await _orderRepository.GetTotalCountSumOrder(searchModel);

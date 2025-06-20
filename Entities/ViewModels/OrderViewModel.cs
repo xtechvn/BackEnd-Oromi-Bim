@@ -56,6 +56,7 @@ namespace Entities.ViewModels
         public int Quantity { get; set; }
         public string FullName { get; set; }
         public string Phone { get; set; }
+        public string Email { get; set; }
 
         public List<ProductMongoDbModel> ListProduct { get; set; }
     }
