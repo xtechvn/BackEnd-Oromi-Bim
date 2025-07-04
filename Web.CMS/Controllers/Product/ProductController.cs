@@ -560,6 +560,7 @@ namespace WEB.CMS.Controllers
                 if (rs != null)
                 {
                     await _redisConn.DeleteCacheByKeyword(CacheName.PRODUCT_LISTING, db_index);
+                    await _redisConn.DeleteCacheByKeyword(CacheName.PRODUCT_DETAIL, db_index);
                     await _redisConn.DeleteCacheByKeyword(CacheName.PRODUCT_DETAIL + product._id, db_index);
                     return Ok(new
                     {
