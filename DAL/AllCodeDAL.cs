@@ -240,5 +240,28 @@ namespace DAL
             }
             return null;
         }
+        public bool DeleteEmptyAllcodeDescription(string type)
+        {
+            try
+            {
+                using (var _DbContext = new EntityDataContext(_connection))
+                {
+                    var detail = _DbContext.AllCodes.AsNoTracking().Where(n => n.Type == type && (n.Description == null || n.Description == "")).ToList();
+
+                    if (detail != null && detail.Count > 0)
+                    {
+                        _DbContext.AllCodes.RemoveRange(detail);
+
+                    }
+
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetByType - AllCodeDAL. " + ex);
+            }
+            return false;
+        }
     }
 }

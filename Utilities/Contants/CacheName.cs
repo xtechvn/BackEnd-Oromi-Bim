@@ -30,6 +30,7 @@ namespace Utilities.Contants
         public const string PRODUCT_BRAND = "PRODUCT_BRAND";
         public const string PRODUCT_BY_BRAND = "PRODUCT_BY_BRAND_";
         public const string PRODUCT_BY_PRICERANGE = "PRODUCT_BY_PRICERANGE_";
+        public const string OMORI_HOMEPAGE_SLIDE = "OMORI_HOMEPAGE_SLIDE";
 
     }
 }

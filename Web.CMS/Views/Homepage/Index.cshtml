@@ -1,0 +1,165 @@
+﻿@using Entities.Models
+@{
+    ViewData["Title"] = "Chỉnh sửa giao diện trang chủ - BestMall";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string static_url = (string)ViewBag.Static;
+    List<AllCode> banner_slide = (List<AllCode>)ViewBag.BannerSlide;
+    List<AllCode> banner_sub = (List<AllCode>)ViewBag.BannerSub;
+    List<AllCode> buying_trend_sub = (List<AllCode>)ViewBag.Supplier;
+    int max_slide = (int)ViewBag.MaxSlide;
+    int max_sub = (int)ViewBag.MaxSub;
+    int max_supplier = (int)ViewBag.MaxSupplier;
+    string url_fixed = "";
+}
+<section class="main-container add-banner add-product">
+
+    <div class="row-main container">
+        <div class="box-info bg-white p-3 mb-3">
+            <h4 class="title-box mb-3">Banner Slide đầu trang chủ</h4>
+            @*             <a href="javascript:;" class="float-right color-blue">Xem trước</a>
+                <h5 class="mb-3">Hình ảnh sản phẩm</h5>
+            *@            <div class="item row flex-lg-nowrap gap10 mb-4 w-100">
+                <label class="col-2">Banner Slide<br />(934x250px)</label>
+                <div class="col-10 wrap_input">
+                    <div class="row list w-100" style="gap: 0;" id="banner-main">
+                        @for (int i = 0; i < max_slide; i++)
+                        {
+                            var selected = banner_slide == null ? new AllCode() : banner_slide.FirstOrDefault(x => x.CodeValue == (i + 1));
+                            url_fixed = "";
+                            if (selected != null && selected.Id > 0 && selected.Description != null && selected.Description.Trim() != "")
+                            {
+                                url_fixed = selected.Description;
+                                if (!url_fixed.Contains(static_url)
+                                && !url_fixed.Contains("base64")
+                                && !url_fixed.Contains("data:video"))
+                                {
+                                    url_fixed = static_url + selected.Description;
+                                }
+                            }
+                            <div class="col-md-3 img-upload-col @( (selected!=null && selected.Id > 0&& url_fixed !=null&&url_fixed.Trim() !="") ? "" : " items import")"
+                                 data-pos="@((i + 1))"
+                                 data-id="@( (selected!=null && selected.Id > 0) ? selected.Id : "-1")"
+                                 style=" margin-right: 15px; ">
+                                <div class="w-100 items magnific_popup" style="@( (selected!=null && selected.Id > 0&& url_fixed !=null&&url_fixed.Trim() !="")  ? "" : "display:none;")">
+                                    <button type="button" class="delete"><i class="icofont-close-line"></i></button>
+                                    <a class=" magnific_thumb">
+                                        <img src="@url_fixed">
+                                    </a>
+                                </div>
+                                <div class="choose choose-wrap p-5 rounded" style="@( (selected!=null && selected.Id > 0&& url_fixed !=null&&url_fixed.Trim() !="")  ? "display:none;" : "")">
+                                    <div class="choose-content">
+                                        <h4><i class="icofont-image text-lg"></i></h4>
+                                    </div>
+
+                                </div>
+                                <input class="banner-file" type="file" style="display:none;" />
+
+                            </div>
+                        }
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="item row flex-lg-nowrap gap10   mb-4  w-100">
+                <label class="col-2">Banner phụ <br />(301x117px)</label>
+                <div class="col-10 wrap_input">
+                    <div class="row list w-100" style="gap: 0;" id="banner-sub">
+                        @for (int i = 0; i < max_sub; i++)
+                        {
+                            var selected = banner_sub == null ? new AllCode() : banner_sub.FirstOrDefault(x => x.CodeValue == (i + 1));
+
+                            url_fixed = "";
+                            if (selected != null && selected.Id > 0 && selected.Description != null && selected.Description.Trim() != "")
+                            {
+                                url_fixed = selected.Description;
+                                if (!url_fixed.Contains(static_url)
+                                && !url_fixed.Contains("base64")
+                                && !url_fixed.Contains("data:video"))
+                                {
+                                    url_fixed = static_url + selected.Description;
+                                }
+                            }
+                            <div class="col-md-3 img-upload-col @((selected != null && selected.Id > 0 && url_fixed != null && url_fixed.Trim() != "") ? "" : " items import")"
+                                 data-pos="@((i + 1))"
+                                 data-id="@((selected != null && selected.Id > 0) ? selected.Id : "-1")"
+                                 style=" margin-right: 15px; ">
+                                <div class="w-100 items magnific_popup" style="@((selected != null && selected.Id > 0 && url_fixed != null && url_fixed.Trim() != "") ? "" : "display:none;")">
+                                    <button type="button" class="delete"><i class="icofont-close-line"></i></button>
+                                    <a class=" magnific_thumb">
+                                        <img src="@url_fixed">
+                                    </a>
+                                </div>
+                                <div class="choose choose-wrap p-5 rounded" style="@((selected != null && selected.Id > 0 && url_fixed != null && url_fixed.Trim() != "") ? "display:none;" : "")">
+                                    <div class="choose-content">
+                                        <h4><i class="icofont-image text-lg"></i></h4>
+                                    </div>
+
+                                </div>
+                                <input class="banner-file" type="file" style="display:none;" />
+
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="item row flex-lg-nowrap gap10  mb-4  w-100">
+                <label class="col-2">Banner xu hướng mua sắm phụ <br />(307x307px)</label>
+                <div class="col-10 wrap_input">
+                    <div class="row list w-100" style="gap: 0;" id="banner-trend-sub">
+                        @for (int i = 0; i < max_supplier; i++)
+                        {
+                            var selected = buying_trend_sub == null ? new AllCode() : buying_trend_sub.FirstOrDefault(x => x.CodeValue == (i + 1));
+
+                            url_fixed = "";
+                            if (selected != null && selected.Id > 0 && selected.Description != null && selected.Description.Trim() != "")
+                            {
+                                url_fixed = selected.Description;
+                                if (!url_fixed.Contains(static_url)
+                                && !url_fixed.Contains("base64")
+                                && !url_fixed.Contains("data:video"))
+                                {
+                                    url_fixed = static_url + selected.Description;
+                                }
+                            }
+                            <div class="col-md-2 img-upload-col @((selected != null && selected.Id > 0 && url_fixed != null && url_fixed.Trim() != "") ? "" : " items import")"
+                                 data-pos="@((i + 1))"
+                                 data-id="@((selected != null && selected.Id > 0) ? selected.Id : "-1")"
+                                 style=" margin-right: 15px; ">
+                                <div class="w-100 items magnific_popup" style="@((selected != null && selected.Id > 0 && url_fixed != null && url_fixed.Trim() != "") ? "" : "display:none;")">
+                                    <button type="button" class="delete"><i class="icofont-close-line"></i></button>
+                                    <a class=" magnific_thumb">
+                                        <img src="@url_fixed">
+                                    </a>
+                                </div>
+                                <div class="choose choose-wrap p-5 rounded" style="@((selected != null && selected.Id > 0 && url_fixed != null && url_fixed.Trim() != "") ? "display:none;" : "")">
+                                    <div class="choose-content">
+                                        <h4><i class="icofont-image text-lg"></i></h4>
+                                    </div>
+
+                                </div>
+                                <input class="banner-file" type="file" style="display:none;" />
+
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="action-form">
+            <a id="cancel-progress" href="javascript:;" class="btn btn-round btn-outline-base">Hủy</a>
+            <a id="save-progress" href="javascript:;" class="btn btn-round btn-base">Cập nhật</a>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script type="text/javascript" src="~/modules/homepage.js" asp-append-version="true"></script>
+}

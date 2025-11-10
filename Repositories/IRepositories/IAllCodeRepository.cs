@@ -27,5 +27,6 @@ namespace Repositories.IRepositories
         Task<T> Sendata<T>(string apiPrefix, string keyToken, Dictionary<string,string> keyValuePairs);
         BankOnePay GetBankOnePayByBankName(string BankName);
         Task<List<AllCode>> GetAllSortByIDAndType(int id , string type);
+        bool DeleteEmptyAllcodeDescription(string type);
     }
 }
