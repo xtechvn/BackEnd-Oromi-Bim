@@ -21,8 +21,8 @@ namespace Utilities.Contants
         public const string USER_ROLE = "USER_ROLE_";
         public const string ARTICLE = "ARTICLE_";
 
-        public const string PRODUCT_LISTING = "PRODUCT_LISTING_";
-        public const string PRODUCT_DETAIL = "PRODUCT_DETAIL_";
+        public const string PRODUCT_LISTING = "OMORI_PRODUCT_LISTING_";
+        public const string PRODUCT_DETAIL = "OMORI_PRODUCT_DETAIL_";
         public const string ORDER_DETAIL_FE = "ORDER_DETAIL_FE_";
         public const string DISTRICT = "DISTRICT";
         public const string WARD = "WARD";

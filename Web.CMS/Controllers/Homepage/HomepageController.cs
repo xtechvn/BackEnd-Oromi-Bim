@@ -36,7 +36,7 @@ namespace Web.CMS.Controllers.Homepage
             ViewBag.BannerSub = new List<AllCode>();
             ViewBag.MaxSlide = max_slide;
             ViewBag.MaxSub = max_sub;
-            ViewBag.MaxSupplier = 6;
+            ViewBag.MaxSupplier = 7;
             string static_domain = _configuration["DomainConfig:ImageStatic"];
             ViewBag.Static = static_domain;
             try
