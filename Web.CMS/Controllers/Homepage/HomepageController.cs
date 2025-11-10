@@ -107,7 +107,7 @@ namespace Web.CMS.Controllers.Homepage
                 {
                     foreach (var banner in trending_main)
                     {
-                        banner.Type = "HOMEPAGE_TRENDINGMAIN";
+                        banner.Type = "HOMEPAGE_SUPPLIER";
                         banner.UpdateTime = DateTime.Now;
                         banner.CreateDate = DateTime.Now;
                         banner.CreatedBy = _UserId;
@@ -125,7 +125,7 @@ namespace Web.CMS.Controllers.Homepage
                 }
               
                 _allCodeRepository.DeleteEmptyAllcodeDescription("HOMEPAGE_TRENDINGSUB");
-                _allCodeRepository.DeleteEmptyAllcodeDescription("HOMEPAGE_TRENDINGMAIN");
+                _allCodeRepository.DeleteEmptyAllcodeDescription("HOMEPAGE_SUPPLIER");
                 _allCodeRepository.DeleteEmptyAllcodeDescription("HOMEPAGE_SLIDE");
 
                 _redisConn.clear(CacheName.OMORI_HOMEPAGE_SLIDE, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
